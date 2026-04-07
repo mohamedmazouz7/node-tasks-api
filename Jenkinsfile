@@ -12,7 +12,7 @@ pipeline {
         stage("install dependencies") {
             steps {
                 script {
-                    echo "========== Installing dependencies =========="
+                    echo "=========== Installing dependencies =========="
                     sh 'npm install'
                 }
             }
