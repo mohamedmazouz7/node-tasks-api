@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'nodejs-20'
+    }
 
     environment {
         IMAGE_NAME = "nirou42/node-tasks-api"
