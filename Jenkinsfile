@@ -5,6 +5,11 @@ pipeline {
         nodejs 'nodejs-20'
     }
 
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
     environment {
         IMAGE_NAME = "nirou42/node-tasks-api"
         IMAGE_TAG  = "latest"
@@ -19,12 +24,11 @@ pipeline {
                 script {
                     echo "=========== Installing dependencies =========="
                     sh '''#!/bin/bash -e
-                        set -x
                         which node
                         which npm
                         node --version
                         npm --version
-                        npm install
+                        npm ci --only=production
                     '''
                 }
             }
