@@ -9,6 +9,7 @@ pipeline {
         IMAGE_NAME = "nirou42/node-tasks-api"
         IMAGE_TAG  = "latest"
         DROPLET_IP = "152.42.143.246"
+        PATH = "${tool 'nodejs-20'}/bin:${PATH}"
     }
 
     stages {
@@ -17,7 +18,14 @@ pipeline {
             steps {
                 script {
                     echo "=========== Installing dependencies =========="
-                    sh 'npm install'
+                    sh '''#!/bin/bash -e
+                        set -x
+                        which node
+                        which npm
+                        node --version
+                        npm --version
+                        npm install
+                    '''
                 }
             }
         }
@@ -26,7 +34,10 @@ pipeline {
             steps {
                 script {
                     echo "========== Running tests =========="
-                    sh 'npm test'
+                    sh '''#!/bin/bash -e
+                        set -x
+                        npm test
+                    '''
                 }
             }
         }
