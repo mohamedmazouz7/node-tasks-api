@@ -70,8 +70,7 @@ pipeline {
                     withCredentials([
                         sshUserPrivateKey(
                             credentialsId: 'digitalocean-ssh',
-                            keyFileVariable: 'SSH_KEY',
-                            usernameVariable: 'SSH_USER'
+                            keyFileVariable: 'SSH_KEY'
                         ),
                         string(
                             credentialsId: 'app-version',
@@ -80,16 +79,16 @@ pipeline {
                     ]) {
                         sh '''
                             ssh -o StrictHostKeyChecking=no \
-                                -i $SSH_KEY \
-                                $SSH_USER@''' + DROPLET_IP + ''' <<EOF
+                                -i ${SSH_KEY} \
+                                kinpashi@${DROPLET_IP} << 'EOF'
 docker stop node-tasks-api || true
 docker rm node-tasks-api || true
-docker pull ''' + IMAGE_NAME + ''':''' + IMAGE_TAG + '''
+docker pull ${IMAGE_NAME}:${IMAGE_TAG}
 docker run -d \
     -p 3000:3000 \
     --name node-tasks-api \
     --env-file /home/kinpashi/app.env \
-    ''' + IMAGE_NAME + ''':''' + IMAGE_TAG + '''
+    ${IMAGE_NAME}:${IMAGE_TAG}
 EOF
                         '''
                     }
