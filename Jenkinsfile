@@ -28,7 +28,7 @@ pipeline {
                         which npm
                         node --version
                         npm --version
-                        npm ci --omit=dev
+                        npm ci
                     '''
                 }
             }
