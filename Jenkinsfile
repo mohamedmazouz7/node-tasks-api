@@ -78,7 +78,12 @@ pipeline {
                         )
                     ]) {
                         sh '''
-                            ssh -o StrictHostKeyChecking=no \
+                            # Debug: Check if key file exists and has correct permissions
+                            ls -la ${SSH_KEY}
+                            file ${SSH_KEY}
+                            
+                            # Test SSH connection with verbose output
+                            ssh -v -o StrictHostKeyChecking=no \
                                 -i ${SSH_KEY} \
                                 kinpashi@${DROPLET_IP} << 'EOF'
 docker stop node-tasks-api || true
