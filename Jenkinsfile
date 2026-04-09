@@ -78,19 +78,18 @@ pipeline {
                         )
                     ]) {
                         sh '''
-                            # Test SSH connection with verbose output
-                            ssh -v -o StrictHostKeyChecking=no \
+                            ssh -o StrictHostKeyChecking=no \
                                 -i ${SSH_KEY} \
-                                kinpashi@${DROPLET_IP} << 'EOF'
-docker stop node-tasks-api || true
-docker rm node-tasks-api || true
-docker pull ${IMAGE_NAME}:${IMAGE_TAG}
-docker run -d \
-    -p 3000:3000 \
-    --name node-tasks-api \
-    --env-file /home/kinpashi/app.env \
-    ${IMAGE_NAME}:${IMAGE_TAG}
-EOF
+                                kinpashi@${DROPLET_IP} << EOF
+        docker stop node-tasks-api || true
+        docker rm node-tasks-api || true
+        docker pull ${IMAGE_NAME}:${IMAGE_TAG}
+        docker run -d \
+            -p 3000:3000 \
+            --name node-tasks-api \
+            --env-file /home/kinpashi/app.env \
+            ${IMAGE_NAME}:${IMAGE_TAG}
+        EOF
                         '''
                     }
                 }
