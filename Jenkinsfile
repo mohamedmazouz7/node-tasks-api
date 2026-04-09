@@ -71,25 +71,20 @@ pipeline {
                         sshUserPrivateKey(
                             credentialsId: 'digitalocean-ssh',
                             keyFileVariable: 'SSH_KEY'
-                        ),
-                        string(
-                            credentialsId: 'app-version',
-                            variable: 'APP_VERSION'
                         )
                     ]) {
                         sh '''
                             ssh -o StrictHostKeyChecking=no \
                                 -i ${SSH_KEY} \
-                                kinpashi@${DROPLET_IP} << 'DEPLOY'
-docker stop node-tasks-api || true
-docker rm node-tasks-api || true
-docker pull ${IMAGE_NAME}:${IMAGE_TAG}
-docker run -d \
-    -p 3000:3000 \
-    --name node-tasks-api \
-    --env-file /home/kinpashi/app.env \
-    ${IMAGE_NAME}:${IMAGE_TAG}
-DEPLOY
+                                kinpashi@${DROPLET_IP} \
+                                "docker stop node-tasks-api || true && \
+                                 docker rm node-tasks-api || true && \
+                                 docker pull ${IMAGE_NAME}:${IMAGE_TAG} && \
+                                 docker run -d \
+                                    -p 3000:3000 \
+                                    --name node-tasks-api \
+                                    --env-file /home/kinpashi/app.env \
+                                    ${IMAGE_NAME}:${IMAGE_TAG}"
                         '''
                     }
                 }
